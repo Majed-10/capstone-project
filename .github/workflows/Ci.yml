@@ -1,6 +1,7 @@
 name: CI
 
-on: [push, pull_request]
+on: [push,
+ pull_request]
 
 jobs:
   test:
@@ -38,5 +39,5 @@ jobs:
       with:
         push: true
         tags: |
-          majedz/flask-test:latest
-          majedz/flask-test:${{ github.sha }}
+          majedz/flask-app:latest
+          majedz/flask-app:${{ github.sha }}
