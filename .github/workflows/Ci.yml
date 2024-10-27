@@ -22,7 +22,7 @@ jobs:
         run: docker build -t my-image .
 
       - name: Run tests
-        run: docker run my-image test-command # Replace `test-command` with your actual test command
+        run: docker run flask-app 
 
   build-and-push-image:
     runs-on: ubuntu-latest
