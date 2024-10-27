@@ -42,6 +42,6 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          docker build -t my-image .
+          docker build -t flask-app .
           majedz/flask-github-actions:latest
           docker push majedz/flask-github-actions:latest
