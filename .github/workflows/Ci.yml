@@ -1,3 +1,52 @@
+# name: CI/CD Pipeline
+
+# on:
+#   push:
+#     branches:
+#       - main
+#   pull_request:
+#     branches:
+#       - main
+
+# jobs:
+#   test:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
+
+#       - name: Set up Docker
+#         uses: docker/setup-buildx-action@v1
+
+#       - name: Build Docker image
+#         run: docker build -t my-image .
+
+#       - name: Run tests
+#         run: docker run flask-app 
+
+#   build-and-push-image:
+#     runs-on: ubuntu-latest
+#     needs: test
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
+
+#       - name: Log in to Docker Hub
+#         uses: docker/login-action@v2
+#         with:
+#           username: ${{ secrets.DOCKER_USERNAME }} #git accsess
+#           password: ${{ secrets.DOCKER_PASSWORD }}
+
+#       - name: Set up Docker
+#         uses: docker/setup-buildx-action@v1
+
+#       - name: Build and push Docker image
+#         run: |
+#           docker build -t flask-app .
+#           docker run flask-app pytest
+#           majedz/flask-app:latest
+#           docker push majedz/flask-apps:latest
+#           #Now u can create
 name: CI/CD Pipeline
 
 on:
@@ -19,10 +68,10 @@ jobs:
         uses: docker/setup-buildx-action@v1
 
       - name: Build Docker image
-        run: docker build -t my-image .
+        run: docker build -t flask-app .
 
       - name: Run tests
-        run: docker run flask-app 
+        run: docker run flask-app pytest # Replace `pytest` with your actual test command
 
   build-and-push-image:
     runs-on: ubuntu-latest
@@ -34,7 +83,7 @@ jobs:
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
-          username: ${{ secrets.DOCKER_USERNAME }} #git accsess
+          username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Set up Docker
@@ -43,7 +92,5 @@ jobs:
       - name: Build and push Docker image
         run: |
           docker build -t flask-app .
-          docker run flask-app pytest
-          majedz/flask-app:latest
-          docker push majedz/flask-apps:latest
-          #Now u can create
+          docker tag flask-app majedz/flask-app:latest
+          docker push majedz/flask-app:latest
