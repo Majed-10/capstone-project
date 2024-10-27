@@ -9,6 +9,7 @@ COPY requirements.txt .
 
 
 RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install pytest
 COPY . .
 EXPOSE 5000
 CMD ["python", "app.py" , "--host=0.0.0.0"]
