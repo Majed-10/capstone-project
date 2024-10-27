@@ -43,5 +43,5 @@ jobs:
       - name: Build and push Docker image
         run: |
           docker build -t my-image .
-          docker tag my-image majedz/flask-github-actions:latest
+          majedz/flask-github-actions:latest
           docker push majedz/flask-github-actions:latest
