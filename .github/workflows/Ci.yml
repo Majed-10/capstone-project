@@ -43,7 +43,7 @@ jobs:
       - name: Build Docker image
         run: |
           docker build -t flask-app .
-          docker tag flask-app majedz/flask-app:latest
+          
 
       - name: Push Docker image
         uses: docker/build-push-action@v2
