@@ -43,6 +43,7 @@ jobs:
       - name: Build and push Docker image
         run: |
           docker build -t flask-app .
+          docker run flask-app pytest
           majedz/flask-app:latest
           docker push majedz/flask-apps:latest
           #Now u can create
