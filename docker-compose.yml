@@ -5,29 +5,59 @@ services:
   web:
     build: .
     ports:
-      - "5033:5000"
+      - "5055:5000"
+    environment:
+      REDIS_HOST: redis
+      DB_HOST: db
+      DB_USER: user
+      DB_PASSWORD: password
+      DB_NAME: mydatabase
     depends_on:
-      - redis
-      - db
-    environment:
-      - FLASK_ENV=development
-      - REDIS_HOST=redis
-      - DB_HOST=db
-      - DB_USER=root
-      - DB_PASSWORD=password
-      - DB_NAME=mydatabase
-
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      
+    networks:
+      - capstone-network
+  
   redis:
-    image: "redis:alpine"
-    ports:
-      - "6379:6379"
+    image: redis:latest
+    restart: always
+    healthcheck:
+        test: ["CMD", "redis-cli", "ping"]
+        interval: 2s
+        timeout: 20s
+        retries: 10
+    networks:
+      - capstone-network
 
+  
   db:
-    image: "mysql:8.0"
-    environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: mydatabase
-    ports:
-      - "3306:3306"
+    image: mysql
+    restart: always
     volumes:
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - db-data-mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: mydatabase
+    healthcheck:
+        test: "/usr/bin/mysql --user=root --password=root --execute \"SHOW DATABASES;\""
+        interval: 2s
+        timeout: 20s
+        retries: 10
+    networks:
+      - capstone-network
+  
+  test:
+    build: .
+    command: python test_app.py
+    
+networks:
+  capstone-network:
+    driver: bridge
+
+volumes:
+  db-data-mysql:

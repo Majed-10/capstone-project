@@ -1,0 +1,29 @@
+---
+    name: deploy
+    on:
+      workflow_run:
+        workflows: ["ci"]
+        branches: [main]
+        types:
+          - completed
+
+    jobs:
+        deploy:
+            if: ${{ github.event.workflow_run.conclusion == 'success' }}
+            runs-on: self-hosted
+            strategy:
+                matrix:
+                    servers: ["10.0.7.227", "10.0.7.228"]
+            steps:
+                - name: Deploying docker ${{ matrix.servers }}
+                  env:
+                    SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+                    SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+                  run: |
+                        ssh-keyscan -H ${{ matrix.servers }} >> ~/.ssh/known_hosts
+                        echo "$SSH_PRIVATE_KEY" > ~/.ssh/ssh_key
+                        chmod 600 ~/.ssh/ssh_key
+                        ssh -i ~/.ssh/ssh_key $SSH_USERNAME@${{ matrix.servers }} "
+                        docker compose pull web && 
+                        docker compose up web -d && 
+                        docker image rm \$(docker image ls --filter dangling=true -q)"
