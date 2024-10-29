@@ -17,8 +17,8 @@
             steps:
                 - name: Deploying docker ${{ matrix.servers }}
                   env:
-                    SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-                    SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+                    SSH_PRIVATE_KEY: ${{ secrets.SSHPRAIVATE_KEY}}
+                    SSH_USERNAME: ${{ secrets.SSH_USER }}
                   run: |
                         ssh-keyscan -H ${{ matrix.servers }} >> ~/.ssh/known_hosts
                         echo "$SSH_PRIVATE_KEY" > ~/.ssh/ssh_key
