@@ -46,3 +46,4 @@ jobs:
           majedz/flask-app:latest
           majedz/flask-app:${{ github.sha }}
           
+          
