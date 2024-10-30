@@ -27,5 +27,5 @@
                         docker stop \$(docker ps -a -q) &&
                         docker rm \$(docker ps -a -q) &&
                         docker pull majedz/flask-app:latest &&
-                        docker run -p 80:5000 -e REDIS_HOST=10.0.7.89 -e DB_HOST=10.0.7.90 -e DB_USER=user -e DB_PASSWORD=password -e DB_NAME=mydatabase -d majedz/flask-app:latest
+                        docker run -p 80:5000 -e REDIS_HOST=10.0.7.89 -e DB_HOST=10.0.7.90 -e DB_USER=user -e DB_PASSWORD=password -e DB_NAME=mydatabase -d majedz/flask-app:latest"
                         
