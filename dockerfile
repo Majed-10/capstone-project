@@ -1,18 +1,26 @@
-# Use the official Python image from the Docker Hub
-FROM python:3.8-slim-buster
 
+
+
+
+# start by pulling the python image
+FROM python:latest
+
+# copy the requirements file into the image
 WORKDIR /app
-
-COPY requirements.txt requirements.txt
-RUN pip3 install -r requirements.txt
-
 COPY . .
 
-CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0"]
 
 
+# install the dependencies and packages in the requirements file
+RUN pip install -r requirements.txt
+
+# copy every content from the local file to the image
 
 
+# configure the container to run in an executed manner
+ENTRYPOINT [ "python","app.py" ]
+
+ 
 
 
 
