@@ -2,7 +2,7 @@
     name: deploy
     on:
       workflow_run:
-        workflows: ["ci"]
+        workflows: ["Ci"]
         branches: [main]
         types:
           - completed
@@ -13,17 +13,19 @@
             runs-on: self-hosted
             strategy:
                 matrix:
-                    servers: ["10.0.7.227", "10.0.7.228"]
+                    servers: ["10.0.7.93", "10.0.7.94"]
             steps:
                 - name: Deploying docker ${{ matrix.servers }}
                   env:
-                    SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-                    SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+                    SSH_PRIVATE_KEY: ${{ secrets.SSHPRAIVATE_KEY}}
+                    SSH_USERNAME: ${{ secrets.SSH_USER }}
                   run: |
                         ssh-keyscan -H ${{ matrix.servers }} >> ~/.ssh/known_hosts
                         echo "$SSH_PRIVATE_KEY" > ~/.ssh/ssh_key
                         chmod 600 ~/.ssh/ssh_key
                         ssh -i ~/.ssh/ssh_key $SSH_USERNAME@${{ matrix.servers }} "
-                        docker compose pull web && 
-                        docker compose up web -d && 
-                        docker image rm \$(docker image ls --filter dangling=true -q)"
+                        docker stop \$(docker ps -a -q) &&
+                        docker rm \$(docker ps -a -q) &&
+                        docker pull majedz/flask-app:latest &&
+                        docker run -p 80:5000 -e REDIS_HOST=10.0.7.89 -e DB_HOST=10.0.7.90 -e DB_USER=user -e DB_PASSWORD=password -e DB_NAME=mydatabase -d majedz/flask-app:latest"
+                        
